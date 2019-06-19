@@ -16,14 +16,16 @@ module.exports = {
     globalObject: 'this'
   },
   module: {
-    rules: [{
-      test: /\.js$/,
-      exclude: /(node_modules)/,
-      loader: 'babel-loader',
-      options: {
-        presets: ['@babel/preset-env']
-      }
-    }, {
+    rules: [
+      //{
+      //test: /\.js$/,
+      //exclude: /(node_modules)/,
+      //loader: 'babel-loader',
+      //options: {
+      //  presets: ['@babel/preset-env']
+      //}
+    //},
+    {
       test: /\.vue$/,
       loader: 'vue-loader'
     }, {
@@ -45,7 +47,8 @@ module.exports = {
     }, {
       test: /\.(svg|eot|woff|ttf|woff2)$/,
       loader: [ 'file-loader' ]
-    }]
+    }
+    ]
   },
   plugins: [
     new VueLoaderPlugin(),

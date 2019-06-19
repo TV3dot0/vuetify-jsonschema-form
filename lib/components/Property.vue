@@ -590,7 +590,7 @@
   </div>
 </template>
 
-<script>
+<script type="text/ecmascript-6">
 import SelectIcon from './SelectIcon.vue'
 import schemaUtils from '../utils/schema'
 import selectUtils from '../utils/select'
@@ -751,8 +751,12 @@ export default {
         if (this.fromUrlParams[key] === undefined) return
         else url = url.replace(`{${key}}`, this.fromUrlParams[key])
       }
-      this.loading = true
-      this.options.httpLib.get(url)
+      this.loading = true;
+      const _opts = {
+        "withCredentials": true,
+        "crossdomain": true
+      };
+      this.options.httpLib.get(url, _opts)
         .then(res => {
           const body = res.data || res.body
           const items = this.fullSchema['x-itemsProp'] ? body[this.fullSchema['x-itemsProp']] : body
