@@ -31,7 +31,7 @@
     computed: {
       resolvedSchema() {
         const res = jrefs.resolve(this.schema);
-        console.log('resolved schema', res);
+        //console.log('resolved schema', res);
         return res
       },
       fullOptions() {

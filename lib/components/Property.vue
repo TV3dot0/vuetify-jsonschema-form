@@ -761,7 +761,7 @@ export default {
           const body = res.data || res.body
           const items = this.fullSchema['x-itemsProp'] ? body[this.fullSchema['x-itemsProp']] : body
           if (!Array.isArray(items)) throw new Error(`Result of http fetch ${url} is not an array`)
-          console.log('items', items)
+          //console.log('items', items)
           this.rawSelectItems = items
           this.loading = false
         })
