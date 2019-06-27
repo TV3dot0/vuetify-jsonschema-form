@@ -111,7 +111,9 @@
         <template slot="selection" slot-scope="data">
           <div class="v-select__selection v-select__selection--comma">
             <select-icon v-if="itemIcon" :value="data.item" />
-            <span v-if="![null, undefined].includes(data.item)">{{ data.item + (fullSchema.type === 'array' && data.index !== modelWrapper[modelKey].length - 1 ? ',&nbsp;' : '') }}</span>
+            <span v-if="![null, undefined].includes(data.item)">
+              {{ data.item + (fullSchema.type === 'array' && data.index !== modelWrapper[modelKey].length - 1 ? ',&nbsp;' : '') }}
+            </span>
           </div>
         </template>
         <template slot="item" slot-scope="data">
@@ -192,13 +194,18 @@
       <template slot="selection" slot-scope="data">
         <div class="v-select__selection v-select__selection--comma">
           <select-icon v-if="itemIcon" :value="data.item[itemIcon]" />
-          <span v-if="![null, undefined].includes(data.item[itemTitle])">{{ data.item[itemTitle] + (fullSchema.type === 'array' && data.index !== modelWrapper[modelKey].length - 1 ? ',&nbsp;' : '') }}</span>
+          <span v-if="![null, undefined].includes(data.item[itemTitle])">
+            {{ data.item[itemTitle] + (fullSchema.type === 'array' && data.index !== modelWrapper[modelKey].length - 1 ? ',&nbsp;' : '') }}
+          </span>
+          <span v-else>
+            {{ data.item  + (fullSchema.type === 'array' && data.index !== modelWrapper[modelKey].length - 1 ? ',&nbsp;' : '') }}
+          </span>
         </div>
       </template>
       <template slot="item" slot-scope="data">
         <select-icon v-if="itemIcon" :value="data.item[itemIcon]" />
         <v-list-tile-content>
-          <v-list-tile-title>{{ data.item[itemTitle] }}</v-list-tile-title>
+          <v-list-tile-title>{{ itemTitle ? data.item[itemTitle] : data.item }}</v-list-tile-title>
         </v-list-tile-content>
       </template>
 
@@ -641,10 +648,10 @@ export default {
       return matchAll(this.fullSchema['x-fromUrl'], /\{(.*?)\}/g).toArray().filter(key => key !== 'q')
     },
     itemKey() {
-      return this.fullSchema['x-itemKey'] || 'key'
+      return this.fullSchema['x-itemKey']
     },
     itemTitle() {
-      return this.fullSchema['x-itemTitle'] || 'title'
+      return this.fullSchema['x-itemTitle']
     },
     itemIcon() {
       return this.fullSchema['x-itemIcon'] || (this.fullSchema['x-display'] === 'icon' ? this.itemKey : null)
@@ -675,12 +682,6 @@ export default {
     }
   },
   watch: {
-    itemTitle(n,o) {
-      console.log('item title', n)
-    },
-    itemKey(n,o) {
-      console.log('item key', n)
-    },
     q() {
       // This line prevents reloading the list just after selecting an item in an auto-complete
       if (this.modelWrapper[this.modelKey] && this.modelWrapper[this.modelKey][this.itemTitle] === this.q) return
@@ -831,7 +832,10 @@ export default {
       // Case of a select based on an array somewhere in the data
       if (this.fullSchema['x-fromData']) {
         this.$watch('modelRoot.' + this.fullSchema['x-fromData'], (val) => {
-          this.rawSelectItems = val
+          this.rawSelectItems = val;
+          //console.log('data', val);
+          //console.log('key',this.fullSchema['x-itemKey']);
+          //console.log('title',this.fullSchema['x-itemTitle']);
         }, { immediate: true })
       }
       // Watch the dynamic parts of the URL used to fill the select field
