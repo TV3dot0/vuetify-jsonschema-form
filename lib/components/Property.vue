@@ -675,6 +675,12 @@ export default {
     }
   },
   watch: {
+    itemTitle(n,o) {
+      console.log('item title', n)
+    },
+    itemKey(n,o) {
+      console.log('item key', n)
+    },
     q() {
       // This line prevents reloading the list just after selecting an item in an auto-complete
       if (this.modelWrapper[this.modelKey] && this.modelWrapper[this.modelKey][this.itemTitle] === this.q) return
