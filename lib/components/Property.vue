@@ -598,11 +598,15 @@
 </template>
 
 <script type="text/ecmascript-6">
+  
+  import debug from 'debug'
 import SelectIcon from './SelectIcon.vue'
 import schemaUtils from '../utils/schema'
 import selectUtils from '../utils/select'
-const matchAll = require('match-all')
-const md = require('markdown-it')()
+  
+const matchAll = require('match-all');
+const md = require('markdown-it')();
+  const log = debug('forms:property');
 
 export default {
   name: 'Property',
@@ -691,7 +695,7 @@ export default {
       handler() {
         if (this.fullSchema && JSON.stringify(this.fullSchema) !== this.lastFullSchema) {
           this.lastFullSchema = JSON.stringify(this.fullSchema)
-          // console.log('Schema changed', JSON.stringify(this.fullSchema))
+          log('Schema changed', JSON.stringify(this.fullSchema))
           this.initFromSchema()
           this.cleanUpExtraProperties()
           this.applySubModels()
@@ -768,7 +772,7 @@ export default {
           const body = res.data || res.body
           const items = this.fullSchema['x-itemsProp'] ? body[this.fullSchema['x-itemsProp']] : body
           if (!Array.isArray(items)) throw new Error(`Result of http fetch ${url} is not an array`)
-          //console.log('items', items)
+          //log('items', items)
           this.rawSelectItems = items
           this.loading = false
         })
@@ -778,30 +782,30 @@ export default {
         })
     },
     cleanUpExtraProperties() {
-      // console.log('Cleanup extra properties')
+      log('Cleanup extra properties')
       // cleanup extra properties
       if (this.fullSchema.type === 'object' && this.fullSchema.properties && Object.keys(this.fullSchema.properties).length && this.modelWrapper[this.modelKey]) {
         Object.keys(this.modelWrapper[this.modelKey]).forEach(key => {
           if (!this.fullSchema.properties.find(p => p.key === key)) {
-            // console.log(`Remove key ${this.modelKey}.${key}`)
+            // log(`Remove key ${this.modelKey}.${key}`)
             delete this.modelWrapper[this.modelKey][key]
           }
         })
       }
     },
     applySubModels() {
-      // console.log('Apply sub models')
+      log('Apply sub models')
       Object.keys(this.subModels).forEach(subModel => {
         Object.keys(this.subModels[subModel]).forEach(key => {
           if (this.modelWrapper[this.modelKey][key] !== this.subModels[subModel][key]) {
-            // console.log(`Apply submodel ${this.modelKey}.${key}`, JSON.stringify(this.subModels[subModel][key]))
+            // log(`Apply submodel ${this.modelKey}.${key}`, JSON.stringify(this.subModels[subModel][key]))
             this.$set(this.modelWrapper[this.modelKey], key, this.subModels[subModel][key])
           }
         })
       })
     },
     initFromSchema() {
-      // console.log('Init from schema')
+      log('Init from schema')
       let model = this.modelWrapper[this.modelKey]
 
       // Manage default values
@@ -833,9 +837,9 @@ export default {
       if (this.fullSchema['x-fromData']) {
         this.$watch('modelRoot.' + this.fullSchema['x-fromData'], (val) => {
           this.rawSelectItems = val;
-          //console.log('data', val);
-          //console.log('key',this.fullSchema['x-itemKey']);
-          //console.log('title',this.fullSchema['x-itemTitle']);
+          log('data', val);
+          log('key',this.fullSchema['x-itemKey']);
+          log('title',this.fullSchema['x-itemTitle']);
         }, { immediate: true })
       }
       // Watch the dynamic parts of the URL used to fill the select field

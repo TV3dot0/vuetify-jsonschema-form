@@ -16,10 +16,13 @@
 <script type="text/ecmascript-6">
 
   import axios from 'axios'
+  import debug from 'debug'
 
   import jrefs from './utils/json-refs'
   import colors from './utils/colors'
   import Property from './components/Property.vue'
+
+  const log = debug('forms')
 
   export default {
     name: 'VJsonschemaForm',
@@ -31,7 +34,7 @@
     computed: {
       resolvedSchema() {
         const res = jrefs.resolve(this.schema);
-        //console.log('resolved schema', res);
+        log('resolved schema', res);
         return res
       },
       fullOptions() {
