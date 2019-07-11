@@ -1,4 +1,4 @@
 node_modules/
 lib/utils/json-refs.js
-/dist
+dist
 .nuxt
